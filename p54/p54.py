@@ -36,4 +36,4 @@ import sys
 import math
 
 
-print("cock long")
+print("cock not so long")
