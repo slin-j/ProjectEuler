@@ -35,4 +35,5 @@ Lösung
 import sys
 import math
 
-print("cock")
+
+print("cock long")
