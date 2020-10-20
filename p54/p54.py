@@ -31,3 +31,5 @@ How many hands does Player 1 win?
 
 Lösung
 """
+
+print("cock")
