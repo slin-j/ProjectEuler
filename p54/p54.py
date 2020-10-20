@@ -31,9 +31,5 @@ How many hands does Player 1 win?
 
 Lösung
 """
-
-import sys
 import math
 
-
-print("cock not so long")
