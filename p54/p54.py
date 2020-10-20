@@ -46,6 +46,7 @@ class player():
         self.isFlush = False
         self.isStraight = False
         self.isFullHouse = False
+        self.score = 0
 
         # save card number in an array and check if they are all of the same sign
         card_type = -1
@@ -63,7 +64,7 @@ class player():
             
             if "23456789TJQKA".find(letter) != -1:
                 self.card_numbers.append("23456789TJQKA".find(letter)+2)
-    
+
     def calculate_card_score(self):
         self.card_numbers.sort()    # sort values from low to high
         self.highestCard = self.card_numbers[-1]    # save highest number
@@ -75,8 +76,10 @@ class player():
             else:
                 self.isStraight = False
                 break
+        else:
+            print("187")
 
-        if self.isStraight == False:
+        if True:
             # make an array with every number only once in it
             # [4,4,8,8,12] -> [4,8,12]
             unique_numbers = [] 
@@ -100,17 +103,67 @@ class player():
             if (self.have3ofAKind > 0) and (self.havePair > 0): # full House
                 self.isFullHouse = True
 
-        return 1
+        self.score = self.highestCard
 
+        if self.havePair != False:
+            self.score += 10 * self.havePair
+        if self.have2Pair != False:
+            self.score += 100 * self.have2Pair
+        if self.have3ofAKind != False:
+            self.score += 1000 * self.have3ofAKind
+        if self.isStraight != False:
+            if  self.isFlush == False:   # normal straight
+                self.score += 10000 * self.highestCard
+            else:   # straight or royal flush
+                self.score += 100000000 * self.highestCard
+        if self.isFlush != False:
+            self.score += 100000 * self.isFlush
+        if self.isFullHouse != False:
+            self.score += 1000000 * self.have3ofAKind
+        if self.have4ofAKind != False:
+            self.score += 10000000 * self.have4ofAKind
         
+        """
+        High Card:          1 / 2-14
+        One Pair:           10 / 20 - 240 
+        Two Pairs:          100 / 200 - 1400
+        Three of a Kind:    1000
+        Straight:           10000
+        Flush:              100000
+        Full House:         1000000
+        Four of a Kind:     10000000
+        Straight Flush:     100000000
+        Royal Flush:        1000000000
+        """
 
-# p1=player("8C TS KC 9H 4S")
-p1 = player("2C 3C 4C 5C 6C")
-p1.calculate_card_score()
-print("flush is " + str(p1.isFlush))
-print("straight is " + str(p1.isStraight))
-print(p1.havePair)
-print(p1.have2Pair)
-print(p1.have3ofAKind)
-print(p1.have4ofAKind)
+        return self.score
 
+p1_win_counter = 0
+
+txt_file = open("poker.txt","r")
+f_content = txt_file.read()
+win_arr = []
+
+for i in range(1000):
+    #print(str(f_content[i*30:i*30+14]))
+    #print(str(f_content[i*30+15:i*30+29]))
+
+    p1 = player(str(f_content[i*30:i*30+14]))
+    p2 = player(str(f_content[i*30+15:i*30+29]))    
+
+    #print("p1 f = " + str(p1.isFlush))
+    #print("p2 f = " + str(p2.isFlush))
+
+    if p1.calculate_card_score() > p2.calculate_card_score():
+        p1_win_counter += 1
+        win_arr.append(i)
+    if p1.calculate_card_score() == p2.calculate_card_score():
+        print("fuck off: " + str(i))
+
+    if i == 856:
+        print(str(f_content[i*30:i*30+14]))
+        print(str(f_content[i*30+15:i*30+29]))
+
+print(p1_win_counter)
+print(win_arr)
+print(len(win_arr))
