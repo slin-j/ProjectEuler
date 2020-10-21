@@ -152,4 +152,4 @@ for i in range(1000):
         p1_win_counter += 1
         win_arr.append(i)
 
-print(p1_win_counter)
+print("Player 1 wins " + str(p1_win_counter) + " times")
