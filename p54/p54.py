@@ -29,7 +29,8 @@ the first five are Player 1's cards and the last five are Player 2's cards.
 You can assume that all hands are valid (no invalid characters or repeated cards), each player's hand is in no specific order, and in each hand there is a clear winner.
 How many hands does Player 1 win?
 
-Lösung
+Lösung:
+376
 """
 import math
 
@@ -55,12 +56,13 @@ class player():
                 continue
             # if its either H,D,S or C -> 1 of the 4 Card Types
             if "HDSC".find(letter) != -1:
-                if card_type == -1:
-                    card_type = "HDSC".find(letter)
-                if card_type == "HDSC".find(letter):
-                    self.isFlush = True
-                else:
-                    self.isFlush = False
+                if self.isFlush == True:
+                    if card_type == -1:
+                        card_type = "HDSC".find(letter)
+                    if card_type == "HDSC".find(letter):
+                        self.isFlush = True
+                    else:
+                        self.isFlush = False
             
             if "23456789TJQKA".find(letter) != -1:
                 self.card_numbers.append("23456789TJQKA".find(letter)+2)
@@ -76,31 +78,30 @@ class player():
             else:
                 self.isStraight = False
                 break
-        else:
-            print("187")
 
-        if True:
-            # make an array with every number only once in it
-            # [4,4,8,8,12] -> [4,8,12]
-            unique_numbers = [] 
-            for i in self.card_numbers:
-                if i not in unique_numbers:
-                    unique_numbers.append(i)
+        
+        # make an array with every number only once in it
+        # [4,4,8,8,12] -> [4,8,12]
+        unique_numbers = [] 
+        for i in self.card_numbers:
+            if i not in unique_numbers:
+                unique_numbers.append(i)
 
-            isFirstPair = True
-            for i in unique_numbers:
-                if self.card_numbers.count(i) == 2: # pair
-                    if isFirstPair == True: # one pair
-                        self.havePair = i
-                        isFirstPair = False # if there is another pair -> have2Pair
-                    else:                   # two pairs
-                        self.have2Pair = i
-                if self.card_numbers.count(i) == 3: # three of a kind
-                    self.have3ofAKind = i
-                if self.card_numbers.count(i) == 4: # four of a kind
-                    self.have4ofAKind = i
+        isFirstPair = True
+        for i in unique_numbers:
+            if self.card_numbers.count(i) == 2: # pair
+                if isFirstPair == True: # one pair
+                    self.havePair = i
+                    isFirstPair = False # if there is another pair -> have2Pair
+                else:                   # two pairs
+                    self.have2Pair = i
+            if self.card_numbers.count(i) == 3: # three of a kind
+                self.have3ofAKind = i
+            if self.card_numbers.count(i) == 4: # four of a kind
+                self.have4ofAKind = i
 
-            if (self.have3ofAKind > 0) and (self.havePair > 0): # full House
+        if self.have3ofAKind != False:  # full House
+            if self.havePair != False:
                 self.isFullHouse = True
 
         self.score = self.highestCard
@@ -117,12 +118,11 @@ class player():
             else:   # straight or royal flush
                 self.score += 100000000 * self.highestCard
         if self.isFlush != False:
-            self.score += 100000 * self.isFlush
+            self.score += 100000 * self.highestCard
         if self.isFullHouse != False:
             self.score += 1000000 * self.have3ofAKind
         if self.have4ofAKind != False:
             self.score += 10000000 * self.have4ofAKind
-        
         """
         High Card:          1 / 2-14
         One Pair:           10 / 20 - 240 
@@ -145,25 +145,11 @@ f_content = txt_file.read()
 win_arr = []
 
 for i in range(1000):
-    #print(str(f_content[i*30:i*30+14]))
-    #print(str(f_content[i*30+15:i*30+29]))
-
     p1 = player(str(f_content[i*30:i*30+14]))
-    p2 = player(str(f_content[i*30+15:i*30+29]))    
-
-    #print("p1 f = " + str(p1.isFlush))
-    #print("p2 f = " + str(p2.isFlush))
+    p2 = player(str(f_content[i*30+15:i*30+29]))
 
     if p1.calculate_card_score() > p2.calculate_card_score():
         p1_win_counter += 1
         win_arr.append(i)
-    if p1.calculate_card_score() == p2.calculate_card_score():
-        print("fuck off: " + str(i))
-
-    if i == 856:
-        print(str(f_content[i*30:i*30+14]))
-        print(str(f_content[i*30+15:i*30+29]))
 
 print(p1_win_counter)
-print(win_arr)
-print(len(win_arr))
