@@ -33,6 +33,7 @@ Lösung:
 376
 """
 import math
+import sys, os
 
 class player():
     def __init__(self, Card_string):
@@ -63,14 +64,14 @@ class player():
                         self.isFlush = True
                     else:
                         self.isFlush = False
-            
+
             if "23456789TJQKA".find(letter) != -1:
                 self.card_numbers.append("23456789TJQKA".find(letter)+2)
 
     def calculate_card_score(self):
         self.card_numbers.sort()    # sort values from low to high
         self.highestCard = self.card_numbers[-1]    # save highest number
-        
+
         for straightIndex in range(1,5):
             if (self.card_numbers[straightIndex-1] + 1) == self.card_numbers[straightIndex]:
                 self.isStraight = True
@@ -79,10 +80,10 @@ class player():
                 self.isStraight = False
                 break
 
-        
+
         # make an array with every number only once in it
         # [4,4,8,8,12] -> [4,8,12]
-        unique_numbers = [] 
+        unique_numbers = []
         for i in self.card_numbers:
             if i not in unique_numbers:
                 unique_numbers.append(i)
@@ -125,7 +126,7 @@ class player():
             self.score += 10000000 * self.have4ofAKind
         """
         High Card:          1 / 2-14
-        One Pair:           10 / 20 - 240 
+        One Pair:           10 / 20 - 240
         Two Pairs:          100 / 200 - 1400
         Three of a Kind:    1000
         Straight:           10000
@@ -139,8 +140,7 @@ class player():
         return self.score
 
 p1_win_counter = 0
-
-txt_file = open("poker.txt","r")
+txt_file = open(os.path.join(sys.path[0], 'poker.txt'),'r')
 f_content = txt_file.read()
 win_arr = []
 
